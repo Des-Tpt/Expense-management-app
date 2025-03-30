@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import com.example.qlct.Database.DataBaseHelper;
+import com.example.qlct.Database.User;
 import com.example.qlct.R;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -17,14 +18,14 @@ public class AuthManager {
 
     public static void login(Context context, String email, String password, AuthCallback callback) {
         DataBaseHelper dbHelper = new DataBaseHelper(context);
-        boolean isValid = dbHelper.checkUser(email, password);
+        User user = dbHelper.checkUser(email, password);
 
-        if (!isValid) {
+        if (user == null) {
             showErrorPopup(context, "Sai email hoặc mật khẩu!");
             callback.onError("Sai email hoặc mật khẩu!");
         } else {
             showSuccessPopup(context, "Đăng nhập thành công!");
-            callback.onSuccess("0", ""); // ID tạm thời
+            callback.onSuccess(String.valueOf(user.getId()), user.getUsername());
         }
     }
     @SuppressLint("UseCompatLoadingForDrawables")

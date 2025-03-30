@@ -9,8 +9,8 @@ import android.content.ContentValues;
 import androidx.annotation.Nullable;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "qlct.db"; //
-    private static final int DATABASE_VERSION = 1; //
+    private static final String DATABASE_NAME = "qlct.db";
+    private static final int DATABASE_VERSION = 1;
     private static final String CREATE_USERS_TABLE =
             "CREATE TABLE users (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -39,15 +39,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean checkUser(String email, String password) {
+    public User checkUser(String email, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?";
+        User user = null;
+
+        String query = "SELECT " + COLUMN_ID + ", " + COLUMN_USERNAME + " FROM " + TABLE_USERS +
+                " WHERE " + COLUMN_EMAIL + "=? AND " + COLUMN_PASSWORD + "=?";
         Cursor cursor = db.rawQuery(query, new String[]{email, password});
 
-        boolean exists = cursor.getCount() > 0;
+        if (cursor.moveToFirst()) {
+            int userId = cursor.getInt(0);
+            String username = cursor.getString(1);
+            user = new User(userId, username);
+        }
+
         cursor.close();
         db.close();
-        return exists;
+        return user;
     }
     public boolean addUser(String email, String password, String username) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -59,6 +67,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         long result = db.insert("users", null, values);
         db.close();
         return result != -1;
+    }
+    public boolean checkEmailExists(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_USERS + " WHERE " + COLUMN_EMAIL + "=?";
+        Cursor cursor = db.rawQuery(query, new String[]{email});
+
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+        return exists;
     }
 }
 
