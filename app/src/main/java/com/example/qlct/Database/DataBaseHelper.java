@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
+import android.util.Log;
 import android.util.Pair;
 
 import com.github.mikephil.charting.data.PieEntry;
@@ -174,5 +175,88 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.close();
         return new Pair<>(entries, totalIncomes);
     }
+
+    public List<expense> getAllExpenses() {
+        List<expense> expenseList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + TABLE_EXPENSES, null);  // Sử dụng tên bảng chi tiêu của bạn
+
+            if (cursor != null && cursor.moveToFirst()) {
+                // Kiểm tra xem cột có tồn tại không trước khi lấy giá trị
+                int idIndex = cursor.getColumnIndex("id");
+                int categoryIndex = cursor.getColumnIndex("category");
+                int amountIndex = cursor.getColumnIndex("amount");
+                int dateIndex = cursor.getColumnIndex("date");
+
+                // Kiểm tra nếu bất kỳ cột nào không tồn tại, trả về giá trị mặc định hoặc ghi log lỗi
+                if (idIndex >= 0 && categoryIndex >= 0 && amountIndex >= 0 && dateIndex >= 0) {
+                    do {
+                        int id = cursor.getInt(idIndex);
+                        String category = cursor.getString(categoryIndex);
+                        float amount = cursor.getFloat(amountIndex);
+                        String date = cursor.getString(dateIndex);
+
+                        // Tạo đối tượng expense và thêm vào danh sách
+                        expense expenseItem = new expense(id, category, amount, date);  // Đảm bảo constructor của expense phù hợp
+                        expenseList.add(expenseItem);
+                    } while (cursor.moveToNext());
+                } else {
+                    Log.e("DB", "Một hoặc nhiều cột không tồn tại trong bảng 'expenses'.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+        return expenseList;
+    }
+    public List<income> getAllIncomes() {
+        List<income> incomeList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + TABLE_INCOMES, null);
+
+            if (cursor != null && cursor.moveToFirst()) {
+                int idIndex = cursor.getColumnIndex("id");
+                int categoryIndex = cursor.getColumnIndex("category");
+                int amountIndex = cursor.getColumnIndex("amount");
+                int dateIndex = cursor.getColumnIndex("date");
+                int noteIndex = cursor.getColumnIndex("note");
+
+                if (idIndex >= 0 && categoryIndex >= 0 && amountIndex >= 0 && dateIndex >= 0 && noteIndex >= 0) {
+                    do {
+                        int id = cursor.getInt(idIndex);
+                        String category = cursor.getString(categoryIndex);
+                        double amount = cursor.getDouble(amountIndex);
+                        String date = cursor.getString(dateIndex);
+                        String note = cursor.getString(noteIndex);
+
+                        income incomeItem = new income(id, category, amount, note, date);
+                        incomeList.add(incomeItem);
+                    } while (cursor.moveToNext());
+                } else {
+                    Log.e("DB", "Một hoặc nhiều cột không tồn tại trong bảng 'incomes'.");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+        return incomeList;
+    }
 }
+
 

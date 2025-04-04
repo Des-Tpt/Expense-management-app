@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -21,26 +21,26 @@
 
             <RadioButton
                 android:id="@+id/rbIncome"
-                android:layout_width="60dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
                 android:paddingVertical="8dp"
-                android:text="income"
+                android:text="Thu nhập"
                 android:background="@drawable/toggle_left"/>
 
             <RadioButton
                 android:id="@+id/rbExpense"
-                android:layout_width="60dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
-                android:text="expense"
+                android:text="Chi tiêu"
                 android:background="@drawable/toggle_right"/>
-
         </RadioGroup>
+
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,17 +80,47 @@
         android:id="@+id/viewFlipper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp">
+        android:layout_marginTop="90dp">
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChartIncome"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="match_parent"
+            android:gravity="center">
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChartExpense"
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChartIncome"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="260dp"
+                android:layout_marginTop="70dp"
+                android:layout_gravity="center"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChartExpense"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewExpense"
+                android:layout_width="wrap_content"
+                android:layout_height="260dp"
+                android:layout_marginTop="70dp"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
     </ViewFlipper>
 
 

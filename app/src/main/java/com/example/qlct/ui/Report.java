@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -20,6 +22,8 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.ViewFlipper;
 
+import com.example.qlct.Database.expense;
+import com.example.qlct.Database.income;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -29,6 +33,7 @@ import com.example.qlct.Database.DataBaseHelper;
 import com.example.qlct.R;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Report extends Fragment {
@@ -41,7 +46,13 @@ public class Report extends Fragment {
     private RadioButton rbExpense;
     private ImageButton btnPrev;
     private ImageButton btnNext;
-
+    private RecyclerView recyclerViewExpenses;
+    private RecyclerView recyclerViewIncome;
+    private CategoryExpenseAdapter categoryExpenseAdapter;
+    private CategoryIncomeAdapter categoryIncomeAdapter;
+    private DataBaseHelper dataBaseHelper;
+    private List<expense> expenseList;
+    private List<income> incomeList;
 
     public Report() {}
 
@@ -63,6 +74,19 @@ public class Report extends Fragment {
 
         setupPieChartExpenseAppearance();
         loadExpenseDataToPieChart();
+
+        recyclerViewExpenses = view.findViewById(R.id.recyclerViewExpense);
+        recyclerViewExpenses.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewIncome = view.findViewById(R.id.recyclerViewIncome);
+        recyclerViewIncome.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        expenseList = dbHelper.getAllExpenses();
+        categoryExpenseAdapter = new CategoryExpenseAdapter(getContext(), expenseList);
+        incomeList = dbHelper.getAllIncomes();
+        categoryIncomeAdapter = new CategoryIncomeAdapter(getContext(), incomeList);
+
+        recyclerViewExpenses.setAdapter(categoryExpenseAdapter);
+        recyclerViewIncome.setAdapter(categoryIncomeAdapter);
 
         return view;
     }
@@ -161,7 +185,29 @@ public class Report extends Fragment {
             Log.d("PieChart", "Entries size: " + entries.size());
 
             PieDataSet dataSet = new PieDataSet(entries, "Categories");
-            dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+
+            List<Integer> colors = new ArrayList<>();
+            for (PieEntry entry : entries) {
+                String category = entry.getLabel();
+                switch (category) {
+                    case "Essential":
+                        colors.add(Color.GREEN);
+                        break;
+                    case "Leisure":
+                        colors.add(Color.RED);
+                        break;
+                    case "Investment":
+                        colors.add(Color.parseColor("#644BAC"));
+                        break;
+                    case "Unexpected":
+                        colors.add(Color.GRAY);
+                        break;
+                    default:
+                        colors.add(Color.DKGRAY);
+                        break;
+                }
+            }
+            dataSet.setColors(colors);
             dataSet.setValueTextSize(14f);
             dataSet.setValueTextColor(Color.WHITE);
 
@@ -200,7 +246,25 @@ public class Report extends Fragment {
             Log.d("PieChart", "Entries size: " + entries.size());
 
             PieDataSet dataSet = new PieDataSet(entries, "Categories");
-            dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+            List<Integer> colors = new ArrayList<>();
+            for (PieEntry entry : entries) {
+                String category = entry.getLabel();
+                switch (category) {
+                    case "Salary":
+                        colors.add(Color.GREEN);
+                        break;
+                    case "Side Income":
+                        colors.add(Color.parseColor("#644BAC"));
+                        break;
+                    case "Investment Profit":
+                        colors.add(Color.rgb(255, 193, 7));
+                        break;
+                    default:
+                        colors.add(Color.DKGRAY);
+                        break;
+                }
+            }
+            dataSet.setColors(colors);
             dataSet.setValueTextSize(14f);
             dataSet.setValueTextColor(Color.WHITE);
 
