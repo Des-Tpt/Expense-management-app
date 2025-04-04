@@ -5,20 +5,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
-import android.util.Log;
-
-import androidx.annotation.Nullable;
+import android.util.Pair;
 
 import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "qlct.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 1;
 
     //Bảng user:
     private static final String CREATE_USERS_TABLE =
@@ -55,8 +51,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_TABLE_INCOMES = "CREATE TABLE " + TABLE_INCOMES + " ("
             + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + COLUMN_AMOUNT + " REAL, "
             + COLUMN_CATEGORY + " TEXT CHECK(" + COLUMN_CATEGORY + " IN ('Salary', 'Side Income', 'Investment Profit')), "
+            + COLUMN_AMOUNT + " REAL, "
             + COLUMN_NOTE + " TEXT, "
             + COLUMN_DATE + " TEXT);";
 
@@ -136,8 +132,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO incomes (category, amount, note, date) VALUES ('Investment Profit', 20.0, 'Clothes', '2025-04-02')");
     }
 
-    public List<PieEntry> getExpenseDataForPieChart() {
+    public Pair<List<PieEntry>, Float> getExpenseDataAndTotal() {
         List<PieEntry> entries = new ArrayList<>();
+        float totalExpense = 0;
         SQLiteDatabase db = this.getReadableDatabase();
 
         String query = "SELECT category, SUM(amount) FROM expenses GROUP BY category";
@@ -148,58 +145,34 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String category = cursor.getString(0);
                 float totalAmount = cursor.getFloat(1);
                 entries.add(new PieEntry(totalAmount, category));
+                totalExpense += totalAmount;
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return entries;
+
+        return new Pair<>(entries, totalExpense);
     }
 
-    public float getTotalExpenseAmount() {
-        float total = 0;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT SUM(amount) FROM expense", null);
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                total = cursor.getFloat(0); // Chuyển sang float để tránh lỗi kiểu dữ liệu
-            }
-            cursor.close();
-        }
-        return total;
-    }
-
-
-    public List<PieEntry> getIncomeDataForPieChart() {
+    public Pair<List<PieEntry>, Float> getIncomeDataAndTotal() {
         List<PieEntry> entries = new ArrayList<>();
+        float totalIncomes = 0;
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String querry = "SELECT category, SUM(amount) FROM incomes GROUP BY category";
-        Cursor cursor = db.rawQuery(querry, null);
+        String query = "SELECT category, SUM(amount) FROM incomes GROUP BY category";
+        Cursor cursor = db.rawQuery(query, null);
 
         if (cursor.moveToFirst()) {
             do {
                 String category = cursor.getString(0);
                 float totalAmount = cursor.getFloat(1);
                 entries.add(new PieEntry(totalAmount, category));
+                totalIncomes += totalAmount;
             } while (cursor.moveToNext());
         }
         cursor.close();
         db.close();
-        return entries;
-
-    }
-
-    public int getTotalIncomeAmount() {
-        int total = 0;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT SUM(amount) FROM incomes", null);
-
-        if (cursor.moveToFirst()) {
-            total = cursor.getInt(0);
-        }
-        cursor.close();
-        return total;
+        return new Pair<>(entries, totalIncomes);
     }
 }
 

@@ -1,26 +1,24 @@
 package com.example.qlct.ui;
 
-import static com.github.mikephil.charting.utils.ColorTemplate.*;
-
-import android.database.ContentObserver;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.ViewFlipper;
-
-import android.database.sqlite.SQLiteDatabase;
-import android.database.Cursor;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -31,11 +29,7 @@ import com.example.qlct.Database.DataBaseHelper;
 import com.example.qlct.R;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Report extends Fragment {
 
@@ -47,8 +41,6 @@ public class Report extends Fragment {
     private RadioButton rbExpense;
     private ImageButton btnPrev;
     private ImageButton btnNext;
-
-    List<PieEntry> pieEntryList;
 
 
     public Report() {}
@@ -62,12 +54,15 @@ public class Report extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_report, container, false);
         pieChartExpense = view.findViewById(R.id.pieChartExpense);
+        pieChartIncome = view.findViewById(R.id.pieChartIncome);
 
         dbHelper = new DataBaseHelper(requireContext());
 
+        setupPieChartIncomeAppearance();
+        loadIncomeDataToPieChart();
+
         setupPieChartExpenseAppearance();
         loadExpenseDataToPieChart();
-
 
         return view;
     }
@@ -131,33 +126,39 @@ public class Report extends Fragment {
         pieChartExpense.setEntryLabelColor(Color.BLACK);
         pieChartExpense.getLegend().setEnabled(false);
         pieChartExpense.getDescription().setEnabled(false);
+        pieChartExpense.setCenterTextSize(20f);
+        pieChartExpense.setCenterTextColor(Color.parseColor("#644BAC"));
         pieChartExpense.animateY(1000, Easing.EaseInOutCubic);
     }
 
     private void setupPieChartIncomeAppearance() {
-        pieChartExpense.setDrawHoleEnabled(true);
-        pieChartExpense.setHoleRadius(60f);
-        pieChartExpense.setTransparentCircleRadius(45f);
-        pieChartExpense.setUsePercentValues(true);
-        pieChartExpense.setDrawEntryLabels(false);
-        pieChartExpense.setEntryLabelColor(Color.BLACK);
-        pieChartExpense.getDescription().setEnabled(false);
-        pieChartExpense.getLegend().setEnabled(false);
-        pieChartExpense.animateY(1000, Easing.EaseInOutCubic);
+        pieChartIncome.setDrawHoleEnabled(true);
+        pieChartIncome.setHoleRadius(60f);
+        pieChartIncome.setTransparentCircleRadius(45f);
+        pieChartIncome.setUsePercentValues(true);
+        pieChartIncome.setDrawEntryLabels(false);
+        pieChartIncome.setEntryLabelColor(Color.BLACK);
+        pieChartIncome.getLegend().setEnabled(false);
+        pieChartIncome.getDescription().setEnabled(false);
+        pieChartIncome.setCenterTextSize(20f);
+        pieChartIncome.setCenterTextColor(Color.parseColor("#644BAC"));
+        pieChartIncome.animateY(1000, Easing.EaseInOutCubic);
     }
-
 
     private void loadExpenseDataToPieChart() {
         try {
-            List<PieEntry> entries = dbHelper.getExpenseDataForPieChart();
-            float totalExpense = dbHelper.getTotalExpenseAmount();
+            Pair<List<PieEntry>, Float> result = dbHelper.getExpenseDataAndTotal();
+            List<PieEntry> entries = result.first;
+            float totalExpense = result.second;
 
-            if (entries == null || entries.isEmpty()) {
+            if (entries.isEmpty()) {
                 Log.e("PieChart", "Không có dữ liệu để hiển thị!");
-                pieChartExpense.clear(); // Xoá biểu đồ nếu không có dữ liệu
+                pieChartExpense.clear();
                 pieChartExpense.invalidate();
                 return;
             }
+
+            Log.d("PieChart", "Entries size: " + entries.size());
 
             PieDataSet dataSet = new PieDataSet(entries, "Categories");
             dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
@@ -167,9 +168,17 @@ public class Report extends Fragment {
             PieData pieData = new PieData(dataSet);
             pieChartExpense.setData(pieData);
 
-            pieChartExpense.setCenterText("$" + totalExpense);
+            SpannableString centerText = new SpannableString("$" + totalExpense);
+            centerText.setSpan(new StyleSpan(Typeface.BOLD), 0, centerText.length(), 0); // In đậm
+            centerText.setSpan(new ForegroundColorSpan(Color.parseColor("#644BAC")), 0, centerText.length(), 0); // Đổi màu
+            centerText.setSpan(new RelativeSizeSpan(1.5f), 0, centerText.length(), 0); // Tăng kích thước 1.5 lần
 
+            pieChartExpense.setCenterText(centerText);
+
+
+            pieChartExpense.notifyDataSetChanged();
             pieChartExpense.invalidate();
+
         } catch (Exception e) {
             Log.e("PieChart", "Lỗi khi load dữ liệu biểu đồ: " + e.getMessage());
         }
@@ -177,15 +186,18 @@ public class Report extends Fragment {
 
     private void loadIncomeDataToPieChart() {
         try {
-            List<PieEntry> entries = dbHelper.getIncomeDataForPieChart();
-            float totalIncome = dbHelper.getTotalIncomeAmount();
+            Pair<List<PieEntry>, Float> result = dbHelper.getIncomeDataAndTotal();
+            List<PieEntry> entries = result.first;
+            float totalIncome = result.second;
 
-            if (entries == null || entries.isEmpty()) {
+            if (entries.isEmpty()) {
                 Log.e("PieChart", "Không có dữ liệu để hiển thị!");
                 pieChartIncome.clear();
                 pieChartIncome.invalidate();
                 return;
             }
+
+            Log.d("PieChart", "Entries size: " + entries.size());
 
             PieDataSet dataSet = new PieDataSet(entries, "Categories");
             dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
@@ -194,9 +206,17 @@ public class Report extends Fragment {
 
             PieData pieData = new PieData(dataSet);
             pieChartIncome.setData(pieData);
-            pieChartIncome.invalidate();
 
-            pieChartExpense.setCenterText("$" + totalIncome);
+            SpannableString centerText = new SpannableString("$" + totalIncome);
+            centerText.setSpan(new StyleSpan(Typeface.BOLD), 0, centerText.length(), 0); // In đậm
+            centerText.setSpan(new ForegroundColorSpan(Color.parseColor("#644BAC")), 0, centerText.length(), 0); // Đổi màu
+            centerText.setSpan(new RelativeSizeSpan(1.5f), 0, centerText.length(), 0); // Tăng kích thước 1.5 lần
+
+            pieChartIncome.setCenterText(centerText);
+
+
+            pieChartIncome.notifyDataSetChanged();
+            pieChartIncome.invalidate();
 
         } catch (Exception e) {
             Log.e("PieChart", "Lỗi khi load dữ liệu biểu đồ: " + e.getMessage());
