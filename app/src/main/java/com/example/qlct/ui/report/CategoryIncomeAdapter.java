@@ -1,4 +1,4 @@
-package com.example.qlct.ui;
+package com.example.qlct.ui.report;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -77,7 +77,7 @@ public class CategoryIncomeAdapter extends RecyclerView.Adapter<CategoryIncomeAd
     private String getCategoryNameInVietnamese(String category) {
         switch (category) {
             case "Salary":
-                return "Lương chính";
+                return "Lương";
             case "Side Income":
                 return "Thu nhập phụ";
             case "Investment Profit":

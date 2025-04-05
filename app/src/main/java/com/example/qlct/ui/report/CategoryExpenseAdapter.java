@@ -1,4 +1,4 @@
-package com.example.qlct.ui;
+package com.example.qlct.ui.report;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;

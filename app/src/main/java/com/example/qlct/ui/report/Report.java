@@ -1,4 +1,4 @@
-package com.example.qlct.ui;
+package com.example.qlct.ui.report;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.ViewFlipper;
@@ -31,7 +34,6 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.animation.Easing;
 import com.example.qlct.Database.DataBaseHelper;
 import com.example.qlct.R;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,8 @@ public class Report extends Fragment {
     private DataBaseHelper dataBaseHelper;
     private List<expense> expenseList;
     private List<income> incomeList;
+
+    private Button btnGoToExpense, btnGotoIncome;
 
     public Report() {}
 
@@ -87,6 +91,25 @@ public class Report extends Fragment {
 
         recyclerViewExpenses.setAdapter(categoryExpenseAdapter);
         recyclerViewIncome.setAdapter(categoryIncomeAdapter);
+
+
+        btnGoToExpense = view.findViewById(R.id.btnGoToExpenseList);
+        btnGoToExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(view);
+                navController.navigate(R.id.fragment_expenses_list);
+            }
+        });
+
+        btnGotoIncome = view.findViewById(R.id.btnGoToIncomeList);
+        btnGotoIncome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController navController = Navigation.findNavController(view);
+                navController.navigate(R.id.fragment_income_list);
+            }
+        });
 
         return view;
     }
@@ -123,6 +146,7 @@ public class Report extends Fragment {
             viewFlipper.showNext();
             updateRadioButton();
         });
+
         updateRadioButton();
     }
 

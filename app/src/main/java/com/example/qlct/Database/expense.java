@@ -5,6 +5,8 @@ public class expense {
     private String category;
     private float amount;  // Thay đổi kiểu từ double thành float
     private String date;
+    private String name;  // Gán từ "note"
+    private boolean isChecked;
 
     // Constructor
     public expense(int id, String category, float amount, String date) {  // Sửa kiểu ở đây

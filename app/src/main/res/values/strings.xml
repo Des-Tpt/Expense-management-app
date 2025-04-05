@@ -65,4 +65,8 @@
     <string name="ng_i_d_ng">Người dùng</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="go_to_dashboard">GO TO DASHBOARD</string>
+    <string name="item_name">Item Name</string>
+    <string name="category">Category</string>
+    <string name="_500">500</string>
 </resources>

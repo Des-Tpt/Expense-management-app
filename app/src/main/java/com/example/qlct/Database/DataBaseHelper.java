@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.util.Log;
 import android.util.Pair;
 
+import com.example.qlct.ui.list.IncomeListAdapter;
 import com.github.mikephil.charting.data.PieEntry;
 
 import java.util.ArrayList;
@@ -123,14 +124,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     private void insertSampleData(SQLiteDatabase db) {
-        db.execSQL("INSERT INTO expenses (category, amount, note, date) VALUES ('Essential', 50.0, 'Lunch', '2025-04-01')");
-        db.execSQL("INSERT INTO expenses (category, amount, note, date) VALUES ('Leisure', 20.0, 'Bus', '2025-04-01')");
-        db.execSQL("INSERT INTO expenses (category, amount, note, date) VALUES ('Investment', 100.0, 'Clothes', '2025-04-02')");
-        db.execSQL("INSERT INTO expenses (category, amount, note, date) VALUES ('Unexpected', 10.0, 'Clothes', '2025-04-02')");
+        db.execSQL("INSERT INTO expenses (category, amount, note, date) VALUES ('Essential', 50.0, 'Mua đồ ăn', '2025-04-01')");
+        db.execSQL("INSERT INTO expenses (category, amount, note, date) VALUES ('Leisure', 100.0, 'Đi du lịch Hà Nội', '2025-04-01')");
+        db.execSQL("INSERT INTO expenses (category, amount, note, date) VALUES ('Investment', 100.0, 'Mua cổ phần công ty A', '2025-04-02')");
+        db.execSQL("INSERT INTO expenses (category, amount, note, date) VALUES ('Unexpected', 10.0, 'Tiền chữa bệnh trĩ', '2025-04-02')");
 
-        db.execSQL("INSERT INTO incomes (category, amount, note, date) VALUES ('Salary', 10.0, 'Lunch', '2025-04-01')");
-        db.execSQL("INSERT INTO incomes (category, amount, note, date) VALUES ('Side Income', 30.0, 'Bus', '2025-04-01')");
-        db.execSQL("INSERT INTO incomes (category, amount, note, date) VALUES ('Investment Profit', 20.0, 'Clothes', '2025-04-02')");
+        db.execSQL("INSERT INTO incomes (category, amount, note, date) VALUES ('Salary', 10.0, 'Lương tháng tư', '2025-04-01')");
+        db.execSQL("INSERT INTO incomes (category, amount, note, date) VALUES ('Side Income', 30.0, 'Tiền lãi tiết kiệm', '2025-04-01')");
+        db.execSQL("INSERT INTO incomes (category, amount, note, date) VALUES ('Investment Profit', 20.0, 'Tiền bán cổ phần', '2025-04-02')");
     }
 
     public Pair<List<PieEntry>, Float> getExpenseDataAndTotal() {
@@ -256,6 +257,93 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             db.close();
         }
         return incomeList;
+    }
+
+    public List<ExpenseModel> getListExpenses() {
+        List<ExpenseModel> expenses = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_EXPENSES, null);
+
+        int idIndex = cursor.getColumnIndex("id");
+        int categoryIndex = cursor.getColumnIndex("category");
+        int amountIndex = cursor.getColumnIndex("amount");
+        int noteIndex = cursor.getColumnIndex("note");
+        int dateIndex = cursor.getColumnIndex("date");
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(idIndex);
+                String cat = cursor.getString(categoryIndex);
+                double amount = cursor.getDouble(amountIndex);
+                String note = cursor.getString(noteIndex);
+                String date = cursor.getString(dateIndex);
+
+                expenses.add(new ExpenseModel(id, cat, amount, note, date, false));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return expenses;
+    }
+
+    public List<IncomeModel> getListIncomes() {
+        List<IncomeModel> incomes = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_INCOMES, null);
+
+        int idIndex = cursor.getColumnIndex("id");
+        int categoryIndex = cursor.getColumnIndex("category");
+        int amountIndex = cursor.getColumnIndex("amount");
+        int noteIndex = cursor.getColumnIndex("note");
+        int dateIndex = cursor.getColumnIndex("date");
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(idIndex);
+                String cat = cursor.getString(categoryIndex);
+                double amount = cursor.getDouble(amountIndex);
+                String note = cursor.getString(noteIndex);
+                String date = cursor.getString(dateIndex);
+
+                incomes.add(new IncomeModel(id, cat, amount, note, date, false));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return incomes;
+    }
+
+    public void deleteExpenseById(int id) {
+        SQLiteDatabase db = null;
+        try {
+            db = this.getWritableDatabase();
+            int rowsDeleted = db.delete("expenses", "id = ?", new String[]{String.valueOf(id)});
+            if (rowsDeleted == 0) {
+                Log.d("Database", "No expense found with ID " + id);
+            }
+        } catch (Exception e) {
+            Log.e("Database", "Error while deleting expense", e);
+        } finally {
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+    }
+    public void deleteIncomeById(int id) {
+        SQLiteDatabase db = null;
+        try {
+            db = this.getWritableDatabase();
+            int rowsDeleted = db.delete("incomes", "id = ?", new String[]{String.valueOf(id)});
+            if (rowsDeleted == 0) {
+                Log.d("Database", "No incomes found with ID " + id);
+            }
+        } catch (Exception e) {
+            Log.e("Database", "Error while deleting incomes", e);
+        } finally {
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
     }
 }
 

@@ -97,9 +97,21 @@
                 android:id="@+id/recyclerViewIncome"
                 android:layout_width="wrap_content"
                 android:layout_height="260dp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="50dp"
                 android:layout_gravity="center"
                 />
+
+            <Button
+                android:id="@+id/btnGoToIncomeList"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_secondary"
+                android:text="Chi tiết"
+                android:textAllCaps="true"
+                android:textColor="#7A4AE2"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_margin="8dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -117,8 +129,19 @@
                 android:id="@+id/recyclerViewExpense"
                 android:layout_width="wrap_content"
                 android:layout_height="260dp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="50dp"
                 android:layout_gravity="center"/>
+            <Button
+                android:id="@+id/btnGoToExpenseList"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_secondary"
+                android:text="Chi tiết"
+                android:textAllCaps="true"
+                android:textColor="#7A4AE2"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_margin="8dp"/>
         </LinearLayout>
 
     </ViewFlipper>

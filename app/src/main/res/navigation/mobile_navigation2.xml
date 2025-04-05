@@ -7,7 +7,16 @@
 
     <fragment
         android:id="@+id/nav_reports"
-        android:name="com.example.qlct.ui.Report"
-        android:label="@string/menu_home"
+        android:name="com.example.qlct.ui.report.Report"
+        android:label="Thống kê thu chi"
         tools:layout="@layout/fragment_report" />
+    <fragment
+        android:id="@+id/fragment_expenses_list"
+        android:name="com.example.qlct.ui.list.ListExpenseFragment"
+        android:label="Danh sách chi tiêu" />
+    <fragment
+        android:id="@+id/fragment_income_list"
+        android:name="com.example.qlct.ui.list.ListIncomeFragment"
+        android:label="Danh sách thu nhập"
+        />
 </navigation>
