@@ -24,4 +24,25 @@ public class IncomeModel {
     public String getDate() { return date; }
     public boolean isChecked() { return isChecked; }
     public void setChecked(boolean checked) { isChecked = checked; }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
 }

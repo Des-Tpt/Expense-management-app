@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.ViewFlipper;
 
+import com.example.qlct.Database.CategorySum;
 import com.example.qlct.Database.expense;
 import com.example.qlct.Database.income;
 import com.github.mikephil.charting.charts.PieChart;
@@ -36,7 +37,9 @@ import com.example.qlct.Database.DataBaseHelper;
 import com.example.qlct.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Report extends Fragment {
 
@@ -49,12 +52,14 @@ public class Report extends Fragment {
     private ImageButton btnPrev;
     private ImageButton btnNext;
     private RecyclerView recyclerViewExpenses;
-    private RecyclerView recyclerViewIncome;
+    private RecyclerView recyclerViewIncomes;
     private CategoryExpenseAdapter categoryExpenseAdapter;
     private CategoryIncomeAdapter categoryIncomeAdapter;
     private DataBaseHelper dataBaseHelper;
     private List<expense> expenseList;
+    private List<CategorySum> expenseSummaryList;
     private List<income> incomeList;
+
 
     private Button btnGoToExpense, btnGotoIncome;
 
@@ -81,16 +86,19 @@ public class Report extends Fragment {
 
         recyclerViewExpenses = view.findViewById(R.id.recyclerViewExpense);
         recyclerViewExpenses.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerViewIncome = view.findViewById(R.id.recyclerViewIncome);
-        recyclerViewIncome.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewIncomes = view.findViewById(R.id.recyclerViewIncome);
+        recyclerViewIncomes.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        expenseList = dbHelper.getAllExpenses();
-        categoryExpenseAdapter = new CategoryExpenseAdapter(getContext(), expenseList);
-        incomeList = dbHelper.getAllIncomes();
-        categoryIncomeAdapter = new CategoryIncomeAdapter(getContext(), incomeList);
+        List<CategorySum> summaryListExpense = dbHelper.getExpenseSummaryByCategory();
+        categoryExpenseAdapter = new CategoryExpenseAdapter(getContext(), summaryListExpense);
+        recyclerViewExpenses.setAdapter(categoryExpenseAdapter);
+
+        List<CategorySum> summaryListIncome = dbHelper.getIncomeSummaryByCategory();
+        categoryIncomeAdapter = new CategoryIncomeAdapter(getContext(), summaryListIncome);
+        recyclerViewIncomes.setAdapter(categoryIncomeAdapter);
 
         recyclerViewExpenses.setAdapter(categoryExpenseAdapter);
-        recyclerViewIncome.setAdapter(categoryIncomeAdapter);
+        recyclerViewIncomes.setAdapter(categoryIncomeAdapter);
 
 
         btnGoToExpense = view.findViewById(R.id.btnGoToExpenseList);
@@ -136,6 +144,8 @@ public class Report extends Fragment {
         viewFlipper.setInAnimation(getContext(), android.R.anim.slide_in_left);
         viewFlipper.setOutAnimation(getContext(), android.R.anim.slide_out_right);
 
+        viewFlipper.setDisplayedChild(0);
+        updateRadioButton();
 
         btnPrev.setOnClickListener(v -> {
             viewFlipper.showPrevious();
@@ -148,6 +158,15 @@ public class Report extends Fragment {
         });
 
         updateRadioButton();
+    }
+
+    public void onResume() {
+        super.onResume();
+
+        if (viewFlipper != null) {
+            viewFlipper.setDisplayedChild(0);
+            updateRadioButton();
+        }
     }
 
     @Override

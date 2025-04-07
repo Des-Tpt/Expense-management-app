@@ -21,4 +21,5 @@ public class income {
     public double getAmount() { return amount; }
     public String getNote() { return note; }
     public String getDate() { return date; }
+
 }

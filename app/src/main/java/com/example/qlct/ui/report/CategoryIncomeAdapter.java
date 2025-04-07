@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.qlct.Database.CategorySum;
 import com.example.qlct.Database.income;
 import com.example.qlct.R;
 
@@ -18,12 +19,12 @@ import java.util.List;
 public class CategoryIncomeAdapter extends RecyclerView.Adapter<CategoryIncomeAdapter.CategoryViewHolder> {
 
     private Context context;
-    private List<income> incomeList;
-
-    public CategoryIncomeAdapter(Context context, List<income> incomeList) {
+    private List<CategorySum> summaryList;
+    public CategoryIncomeAdapter(Context context, List<CategorySum> summaryList) {
         this.context = context;
-        this.incomeList = incomeList;
+        this.summaryList = summaryList;
     }
+
 
     @NonNull
     @Override
@@ -34,19 +35,19 @@ public class CategoryIncomeAdapter extends RecyclerView.Adapter<CategoryIncomeAd
 
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
-        income currentIncome = incomeList.get(position);
-        String vietnameseCategory = getCategoryNameInVietnamese(currentIncome.getCategory());
+        CategorySum currentSummary = summaryList.get(position);
+        String vietnameseCategory = getCategoryNameInVietnamese(currentSummary.getCategory());
 
         holder.txtCategoryName.setText(vietnameseCategory);
-        holder.txtCategoryAmount.setText("$" + currentIncome.getAmount());
+        holder.txtCategoryAmount.setText("$" + currentSummary.getTotalAmount());
 
-        int color = getCategoryColor(currentIncome.getCategory());
+        int color = getCategoryColor(currentSummary.getCategory());
         holder.categoryColor.setBackgroundColor(color);
     }
 
     @Override
     public int getItemCount() {
-        return incomeList != null ? incomeList.size() : 0;
+        return summaryList != null ? summaryList.size() : 0;
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {

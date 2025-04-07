@@ -33,11 +33,11 @@ public class expense {
         this.category = category;
     }
 
-    public float getAmount() {  // Sửa kiểu dữ liệu ở đây
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {  // Sửa kiểu dữ liệu ở đây
+    public void setAmount(float amount) {
         this.amount = amount;
     }
 

@@ -1,19 +1,26 @@
 package com.example.qlct.ui.list;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qlct.Database.DataBaseHelper;
 import com.example.qlct.Database.ExpenseModel;
+import com.example.qlct.Database.IncomeModel;
 import com.example.qlct.R;
 
 import java.util.ArrayList;
@@ -64,7 +71,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
         holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> expense.setChecked(isChecked));
 
         holder.btnEdit.setOnClickListener(v -> {
-
+            showEditPopup(v.getContext(), expense);
         });
     }
 
@@ -72,7 +79,12 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
     public int getItemCount() {
         return expenseList.size();
     }
-
+    public boolean hasAnyChecked() {
+        for (ExpenseModel expense : expenseList) {
+            if (expense.isChecked()) return true;
+        }
+        return false;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox, checkAll;
@@ -118,5 +130,92 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
         expenseList.addAll(dbHelper.getListExpenses());
 
         notifyDataSetChanged();
+    }
+    private void showEditPopup(Context context, ExpenseModel expense) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View dialogView = inflater.inflate(R.layout.dialog_add_expense, null);
+
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        EditText edtNote = dialogView.findViewById(R.id.edtNote);
+        EditText edtMonth = dialogView.findViewById(R.id.edtMonth);
+        EditText edtAmount = dialogView.findViewById(R.id.edtAmount);
+        Spinner spinnerCategory = dialogView.findViewById(R.id.spinnerCategory);
+        Button btnXacNhan = dialogView.findViewById(R.id.btnThem);
+        Button btnHuy = dialogView.findViewById(R.id.btnHuy);
+
+        edtNote.setText(expense.getNote());
+        edtMonth.setText(expense.getDate());
+        edtAmount.setText(String.valueOf(expense.getAmount()));
+
+        String[] categories = context.getResources().getStringArray(R.array.categories);
+
+        String[] displayCategories = {"Chi tiêu thiết yếu", "Giải trí", "Đầu tư", "Chi tiêu không đoán trước"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, displayCategories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(adapter);
+
+
+        int selectedIndex = 0;
+        for (int i = 0; i < categories.length; i++) {
+            if (categories[i].equals(expense.getCategory())) {
+                selectedIndex = i;
+                break;
+            }
+        }
+
+        spinnerCategory.setSelection(selectedIndex);
+
+        btnHuy.setOnClickListener(view -> dialog.dismiss());
+
+
+        btnXacNhan.setOnClickListener(view -> {
+            String note = edtNote.getText().toString().trim();
+            String date = edtMonth.getText().toString().trim();
+            String categoryVi = spinnerCategory.getSelectedItem().toString();
+            String amountStr = edtAmount.getText().toString().trim();
+
+            if (note.isEmpty() || date.isEmpty() || amountStr.isEmpty()) {
+                Toast.makeText(context, "Vui lòng điền đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            double amount = Double.parseDouble(amountStr);
+
+            String categoryEn;
+            switch (categoryVi) {
+                case "Chi tiêu thiết yếu":
+                    categoryEn = "Essential";
+                    break;
+                case "Giải trí":
+                    categoryEn = "Leisure";
+                    break;
+                case "Đầu tư":
+                    categoryEn = "Investment";
+                    break;
+                case "Chi tiêu không đoán trước":
+                    categoryEn = "Unexpected";
+                    break;
+                default:
+                    categoryEn = "Null";
+            }
+
+            expense.setNote(note);
+            expense.setDate(date);
+            expense.setAmount(amount);
+            expense.setCategory(categoryEn);
+
+            dbHelper.updateExpense(expense);
+
+            expenseList.clear();
+            expenseList.addAll(dbHelper.getListExpenses());
+            notifyDataSetChanged();
+
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

@@ -41,10 +41,15 @@ public class LoginActivity extends AppCompatActivity {
                 AuthManager.login(LoginActivity.this, email, password, new AuthManager.AuthCallback() {
                     @Override
                     public void onSuccess(String userId, String username) {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+                        new android.os.Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }, 1500);
                     }
                     @Override
                     public void onError(String errorMessage) {

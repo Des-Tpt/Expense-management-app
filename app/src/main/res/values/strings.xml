@@ -1,11 +1,19 @@
 <resources>
-    <string name="app_name">QLCT</string>
+    <string name="app_name">Quản lí thu chi</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string-array name="categories">
+        <item>Thiết yếu</item>
+        <item>Food</item>
+        <item>Transport</item>
+        <item>Entertainment</item>
+        <item>Other</item>
+    </string-array>
+
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -69,4 +77,7 @@
     <string name="item_name">Item Name</string>
     <string name="category">Category</string>
     <string name="_500">500</string>
+    <string name="n_t_x_c_nh_n">Nút xác nhận</string>
+    <string name="x_c_nh_n">Xác nhận</string>
+    <string name="h_y">Hủy</string>
 </resources>

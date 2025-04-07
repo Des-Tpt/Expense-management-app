@@ -1,4 +1,5 @@
 package com.example.qlct.ui.report;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -9,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.qlct.Database.expense;
+import com.example.qlct.Database.CategorySum;
 import com.example.qlct.R;
 
 import java.util.List;
@@ -17,40 +18,42 @@ import java.util.List;
 public class CategoryExpenseAdapter extends RecyclerView.Adapter<CategoryExpenseAdapter.CategoryViewHolder> {
 
     private Context context;
-    private List<expense> expenseList;
+    private List<CategorySum> summaryList;
 
-    public CategoryExpenseAdapter(Context context, List<expense> expenseList) {
+    // Constructor nhận vào context và summaryList
+    public CategoryExpenseAdapter(Context context, List<CategorySum> summaryList) {
         this.context = context;
-        this.expenseList = expenseList;
+        this.summaryList = summaryList;
     }
 
     @NonNull
     @Override
-    public CategoryExpenseAdapter.CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_category, parent, false);
         return new CategoryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CategoryExpenseAdapter.CategoryViewHolder holder, int position) {
-        expense currentExpense = expenseList.get(position);
-        String vietnameseCategory = getCategoryNameInVietnamese(currentExpense.getCategory());
+    public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
+        CategorySum currentSummary = summaryList.get(position);
+        String vietnameseCategory = getCategoryNameInVietnamese(currentSummary.getCategory());
 
         holder.txtCategoryName.setText(vietnameseCategory);
-        holder.txtCategoryAmount.setText("$" + currentExpense.getAmount());
+        holder.txtCategoryAmount.setText("$" + currentSummary.getTotalAmount());
 
-        int color = getCategoryColor(currentExpense.getCategory());
+        int color = getCategoryColor(currentSummary.getCategory());
         holder.categoryColor.setBackgroundColor(color);
     }
 
     @Override
     public int getItemCount() {
-        return expenseList != null ? expenseList.size() : 0;
+        return summaryList != null ? summaryList.size() : 0;
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
         TextView txtCategoryName, txtCategoryAmount;
         View categoryColor;
+
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
             categoryColor = itemView.findViewById(R.id.category_color);
@@ -58,6 +61,7 @@ public class CategoryExpenseAdapter extends RecyclerView.Adapter<CategoryExpense
             txtCategoryAmount = itemView.findViewById(R.id.txt_category_amount);
         }
     }
+
     private int getCategoryColor(String category) {
         switch (category) {
             case "Essential":
@@ -72,6 +76,7 @@ public class CategoryExpenseAdapter extends RecyclerView.Adapter<CategoryExpense
                 return Color.BLUE;
         }
     }
+
     private String getCategoryNameInVietnamese(String category) {
         switch (category) {
             case "Essential":

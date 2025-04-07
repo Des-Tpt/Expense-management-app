@@ -1,5 +1,6 @@
 package com.example.qlct.Database;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -345,6 +346,97 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             }
         }
     }
+    public void insertExpense(ExpenseModel expense) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY, expense.getCategory());
+        values.put(COLUMN_AMOUNT, expense.getAmount());
+        values.put(COLUMN_NOTE, expense.getNote());
+        values.put(COLUMN_DATE, expense.getDate());
+
+        db.insert(TABLE_EXPENSES, null, values);
+
+        db.close();
+    }
+
+    public void insertIncome(IncomeModel income) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY, income.getCategory());
+        values.put(COLUMN_AMOUNT, income.getAmount());
+        values.put(COLUMN_NOTE, income.getNote());
+        values.put(COLUMN_DATE, income.getDate());
+
+        db.insert(TABLE_INCOMES, null, values);
+
+        db.close();
+    }
+
+    public List<CategorySum> getExpenseSummaryByCategory() {
+        List<CategorySum> summaryList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT category, SUM(amount) as totalAmount FROM expenses GROUP BY category";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
+                float totalAmount = cursor.getFloat(cursor.getColumnIndexOrThrow("totalAmount"));
+                summaryList.add(new CategorySum(category, totalAmount));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return summaryList;
+    }
+
+    public List<CategorySum> getIncomeSummaryByCategory() {
+        List<CategorySum> summaryList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT category, SUM(amount) as totalAmount FROM incomes GROUP BY category";
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
+                float totalAmount = cursor.getFloat(cursor.getColumnIndexOrThrow("totalAmount"));
+                summaryList.add(new CategorySum(category, totalAmount));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return summaryList;
+    }
+
+    public void updateIncome(IncomeModel income) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("note", income.getNote());
+        values.put("date", income.getDate());
+        values.put("category", income.getCategory());
+        values.put("amount", income.getAmount());
+
+        db.update("incomes", values, "id = ?", new String[]{String.valueOf(income.getId())});
+        db.close();
+    }
+
+    public void updateExpense(ExpenseModel expense){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("note", expense.getNote());
+        values.put("date", expense.getDate());
+        values.put("category", expense.getCategory());
+        values.put("amount", expense.getAmount());
+
+        db.update("expense", values, "id = ?", new String[]{String.valueOf(expense.getId())});
+        db.close();
+    }
+
 }
 
 

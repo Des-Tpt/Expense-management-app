@@ -63,7 +63,6 @@ public class SignupActivity extends AppCompatActivity {
                 if (success) {
                     showSuccessPopup(SignupActivity.this, "Đăng ký thành công!");
 
-                    //Delay 1,5 second.
                     new android.os.Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

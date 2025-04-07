@@ -1,0 +1,84 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corner"
+    android:gravity="center"
+    android:clipToPadding="true"
+    android:clipChildren="true">
+
+    <!-- Sử dụng TextView cho tiêu đề nếu không cần nhập dữ liệu -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="NHẬP KHOẢN CHI TIÊU"
+        android:textSize="25dp"
+        android:textColor="@color/purple"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
+
+    <EditText
+        android:id="@+id/edtNote"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:minHeight="48dp"
+        android:background="@drawable/bg_input_field"
+        android:hint="Nội dung chi tiêu..."
+        android:inputType="text|textCapSentences"/>
+
+    <EditText
+        android:id="@+id/edtMonth"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:minHeight="48dp"
+        android:background="@drawable/bg_input_field"
+        android:hint="Ngày thực hiện chi tiêu..."
+        android:inputType="text"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/edtAmount"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:minHeight="48dp"
+        android:background="@drawable/bg_input_field"
+        android:hint="Số tiền đã chi..."
+        android:inputType="numberDecimal"
+        android:layout_marginTop="12dp" />
+
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="300dp"
+        android:layout_height="48dp"
+        android:minHeight="48dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_input_field"
+        android:entries="@array/categories"/>
+
+    <Button
+        android:id="@+id/btnThem"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:layout_marginTop="50dp"
+        android:padding="12dp"
+        android:text="@string/x_c_nh_n"
+        android:textSize="15sp"
+        android:background="@drawable/btn_primary"
+        android:contentDescription="@string/n_t_x_c_nh_n"/>
+
+    <Button
+        android:id="@+id/btnHuy"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:layout_marginTop="10dp"
+        android:padding="12dp"
+        android:background="@drawable/btn_secondary"
+        android:text="@string/h_y"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:textColor="@color/purple"
+        android:contentDescription="Nút hủy"/>
+</LinearLayout>
