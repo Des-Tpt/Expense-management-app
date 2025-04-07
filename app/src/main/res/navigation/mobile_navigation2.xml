@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_reports">
+
+    <fragment
+        android:id="@+id/nav_reports"
+        android:name="com.example.qlct.ui.report.Report"
+        android:label="Thống kê thu chi"
+        tools:layout="@layout/fragment_report" />
+    <fragment
+        android:id="@+id/fragment_expenses_list"
+        android:name="com.example.qlct.ui.list.ListExpenseFragment"
+        android:label="Danh sách chi tiêu" />
+    <fragment
+        android:id="@+id/fragment_income_list"
+        android:name="com.example.qlct.ui.list.ListIncomeFragment"
+        android:label="Danh sách thu nhập"
+        />
+</navigation>

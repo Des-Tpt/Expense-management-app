@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="20dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillColor="#000000"
+        android:pathData="M3,4C2.45,4 2,4.45 2,5V19C2,19.55 2.45,20 3,20H21C21.55,20 22,19.55 22,19V5C22,4.45 21.55,4 21,4H3Z"/>
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M2,7H22V9H2V7Z"/>
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M17,14H20V16H17V14Z"/>
+
+    <!-- Dòng kẻ đại diện số thẻ -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M4,14H14V15.5H4V14Z"/>
+
+    <!-- Dòng kẻ đại diện thông tin bổ sung -->
+
+</vector>

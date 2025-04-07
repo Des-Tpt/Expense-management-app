@@ -52,7 +52,7 @@ public class SignupActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (dbHelper.checkUser(Email, Password)) {
+                if (dbHelper.checkEmailExists(Email)) {
                     showErrorPopup(SignupActivity.this, "Email đã tồn tại! Vui lòng đăng nhập!");
                     email.setText("");
                     email.requestFocus();
@@ -63,7 +63,6 @@ public class SignupActivity extends AppCompatActivity {
                 if (success) {
                     showSuccessPopup(SignupActivity.this, "Đăng ký thành công!");
 
-                    //Delay 1,5 second.
                     new android.os.Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbIncome"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:paddingVertical="8dp"
+                android:text="Thu nhập"
+                android:background="@drawable/toggle_left"/>
+
+            <RadioButton
+                android:id="@+id/rbExpense"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="Chi tiêu"
+                android:background="@drawable/toggle_right"/>
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="384dp">
+
+        <ImageButton
+            android:id="@+id/btnPrev"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:background="@null"
+            android:contentDescription="@string/previous"
+            android:src="@drawable/ic_chevron_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.997" />
+
+        <ImageButton
+            android:id="@+id/btnNext"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="4dp"
+            android:background="@null"
+            android:contentDescription="@string/next"
+            android:src="@drawable/ic_chevron_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.998" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ViewFlipper
+        android:id="@+id/viewFlipper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="90dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChartIncome"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewIncome"
+                android:layout_width="wrap_content"
+                android:layout_height="260dp"
+                android:layout_marginTop="50dp"
+                android:layout_gravity="center"
+                />
+
+            <Button
+                android:id="@+id/btnGoToIncomeList"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_secondary"
+                android:text="Chi tiết"
+                android:textAllCaps="true"
+                android:textColor="#7A4AE2"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_margin="8dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChartExpense"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewExpense"
+                android:layout_width="wrap_content"
+                android:layout_height="260dp"
+                android:layout_marginTop="50dp"
+                android:layout_gravity="center"/>
+            <Button
+                android:id="@+id/btnGoToExpenseList"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@drawable/btn_secondary"
+                android:text="Chi tiết"
+                android:textAllCaps="true"
+                android:textColor="#7A4AE2"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_margin="8dp"/>
+        </LinearLayout>
+
+    </ViewFlipper>
+
+
+</FrameLayout>
