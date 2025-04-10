@@ -97,9 +97,6 @@ public class Report extends Fragment {
         categoryIncomeAdapter = new CategoryIncomeAdapter(getContext(), summaryListIncome);
         recyclerViewIncomes.setAdapter(categoryIncomeAdapter);
 
-        recyclerViewExpenses.setAdapter(categoryExpenseAdapter);
-        recyclerViewIncomes.setAdapter(categoryIncomeAdapter);
-
 
         btnGoToExpense = view.findViewById(R.id.btnGoToExpenseList);
         btnGoToExpense.setOnClickListener(new View.OnClickListener() {
