@@ -433,7 +433,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put("category", expense.getCategory());
         values.put("amount", expense.getAmount());
 
-        db.update("expense", values, "id = ?", new String[]{String.valueOf(expense.getId())});
+        db.update("expenses", values, "id = ?", new String[]{String.valueOf(expense.getId())});
         db.close();
     }
 
