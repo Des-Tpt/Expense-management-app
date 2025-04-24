@@ -25,6 +25,10 @@ public class ExpenseModel {
     public boolean isChecked() { return isChecked; }
     public void setChecked(boolean checked) { isChecked = checked; }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public void setCategory(String category) {
         this.category = category;
     }
