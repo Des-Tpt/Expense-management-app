@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.qlct.Database.UserSession;
 import com.example.qlct.services.AuthManager;
 
 public class LoginActivity extends AppCompatActivity {
@@ -40,7 +42,12 @@ public class LoginActivity extends AppCompatActivity {
 
                 AuthManager.login(LoginActivity.this, email, password, new AuthManager.AuthCallback() {
                     @Override
-                    public void onSuccess(String userId, String username) {
+                    public void onSuccess(String userId, String username, String email) {
+
+                        UserSession.userId = userId;
+                        UserSession.username = username;
+                        UserSession.userEmail = email;
+
                         new android.os.Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {

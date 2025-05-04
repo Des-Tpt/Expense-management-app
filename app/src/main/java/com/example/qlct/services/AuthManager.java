@@ -12,7 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 public class AuthManager {
     public interface AuthCallback {
-        void onSuccess(String userId, String username);
+        void onSuccess(String userId, String username, String userEmail);
         void onError(String errorMessage);
     }
 
@@ -25,7 +25,7 @@ public class AuthManager {
             callback.onError("Sai email hoặc mật khẩu!");
         } else {
             showSuccessPopup(context, "Đăng nhập thành công!");
-            callback.onSuccess(String.valueOf(user.getId()), user.getUsername());
+            callback.onSuccess(String.valueOf(user.getId()), user.getUsername(), user.getEmail());
         }
     }
     @SuppressLint("UseCompatLoadingForDrawables")

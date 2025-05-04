@@ -1,4 +1,4 @@
-package com.example.qlct.ui.list;
+package com.example.qlct.fragment.list;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -19,20 +19,19 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qlct.Database.DataBaseHelper;
-import com.example.qlct.Database.ExpenseModel;
 import com.example.qlct.Database.IncomeModel;
 import com.example.qlct.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.ViewHolder> {
-    private List<ExpenseModel> expenseList;
+public class IncomeListAdapter extends RecyclerView.Adapter<IncomeListAdapter.ViewHolder> {
+    private List<IncomeModel> incomeList;
     private DataBaseHelper dbHelper;
     private boolean isAllChecked = false;
 
-    public ExpenseListAdapter(List<ExpenseModel> expenseList, Context context) {
-        this.expenseList = expenseList;
+    public IncomeListAdapter(List<IncomeModel> incomeList, Context context) {
+        this.incomeList = incomeList;
         this.dbHelper = new DataBaseHelper(context);
     }
 
@@ -45,45 +44,38 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ExpenseModel expense = expenseList.get(position);
-        holder.tvTitle.setText(expense.getNote());
-        switch (expense.getCategory()){
-            case "Essential":
-                holder.tvCategory.setText("Chi tiêu thiết yếu");
+        IncomeModel income = incomeList.get(position);
+        holder.tvTitle.setText(income.getNote());
+
+        switch (income.getCategory()){
+            case "Salary":
+                holder.tvCategory.setText("Lương");
                 break;
-            case "Leisure":
-                holder.tvCategory.setText("Giải trí");
+            case "Side Income":
+                holder.tvCategory.setText("Thu nhập phụ");
                 break;
-            case "Investment":
-                holder.tvCategory.setText("Đầu tư");
-                break;
-            case "Unexpected":
-                holder.tvCategory.setText("Chi tiêu không đoán trước");
+            case "Investment Profit":
+                holder.tvCategory.setText("Lợi nhuận đầu tư");
                 break;
             default:
                 holder.tvCategory.setText("Trống");
                 break;
         }
-        holder.tvPrice.setText("$" + expense.getAmount());
+
+        holder.tvPrice.setText("$" + income.getAmount());
 
         holder.checkBox.setOnCheckedChangeListener(null);
-        holder.checkBox.setChecked(expense.isChecked());
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> expense.setChecked(isChecked));
+        holder.checkBox.setChecked(income.isChecked());
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> income.setChecked(isChecked));
 
         holder.btnEdit.setOnClickListener(v -> {
-            showEditPopup(v.getContext(), expense);
+            showEditPopup(v.getContext(), income);
         });
     }
 
     @Override
     public int getItemCount() {
-        return expenseList.size();
-    }
-    public boolean hasAnyChecked() {
-        for (ExpenseModel expense : expenseList) {
-            if (expense.isChecked()) return true;
-        }
-        return false;
+        return incomeList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -103,10 +95,16 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
         }
     }
 
+    public boolean hasAnyChecked() {
+        for (IncomeModel income : incomeList) {
+            if (income.isChecked()) return true;
+        }
+        return false;
+    }
     @SuppressLint("NotifyDataSetChanged")
     public void toggleCheckAll() {
         isAllChecked = !isAllChecked;
-        for (ExpenseModel item : expenseList) {
+        for (IncomeModel item : incomeList) {
             item.setChecked(isAllChecked);
         }
         notifyDataSetChanged();
@@ -114,27 +112,28 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
 
     @SuppressLint("NotifyDataSetChanged")
     public void deleteChecked() {
-        List<ExpenseModel> toDelete = new ArrayList<>();
+        List<IncomeModel> toDelete = new ArrayList<>();
 
-        for (ExpenseModel expense : expenseList) {
-            if (expense.isChecked()) {
-                toDelete.add(expense);
+        for (IncomeModel income : incomeList) {
+            if (income.isChecked()) {
+                toDelete.add(income);
             }
         }
 
-        for (ExpenseModel expense : toDelete) {
-            dbHelper.deleteExpenseById(expense.getId());
+        for (IncomeModel income : toDelete) {
+            dbHelper.deleteIncomeById(income.getId());
         }
 
-        expenseList.clear();
-        expenseList.addAll(dbHelper.getListExpenses());
+        incomeList.clear();
+        incomeList.addAll(dbHelper.getListIncomes());
 
         notifyDataSetChanged();
     }
-    private void showEditPopup(Context context, ExpenseModel expense) {
+
+    private void showEditPopup(Context context, IncomeModel income) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        View dialogView = inflater.inflate(R.layout.dialog_add_expense, null);
+        View dialogView = inflater.inflate(R.layout.dialog_add_income, null);
 
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
@@ -146,13 +145,13 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
         Button btnXacNhan = dialogView.findViewById(R.id.btnThem);
         Button btnHuy = dialogView.findViewById(R.id.btnHuy);
 
-        edtNote.setText(expense.getNote());
-        edtMonth.setText(expense.getDate());
-        edtAmount.setText(String.valueOf(expense.getAmount()));
+        edtNote.setText(income.getNote());
+        edtMonth.setText(income.getDate());
+        edtAmount.setText(String.valueOf(income.getAmount()));
 
         String[] categories = context.getResources().getStringArray(R.array.categories);
 
-        String[] displayCategories = {"Chi tiêu thiết yếu", "Giải trí", "Đầu tư", "Chi tiêu không đoán trước"};
+        String[] displayCategories = {"Lương", "Thu nhập phụ", "Lợi nhuận đầu tư"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, displayCategories);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
@@ -160,7 +159,7 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
 
         int selectedIndex = 0;
         for (int i = 0; i < categories.length; i++) {
-            if (categories[i].equals(expense.getCategory())) {
+            if (categories[i].equals(income.getCategory())) {
                 selectedIndex = i;
                 break;
             }
@@ -186,31 +185,28 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
 
             String categoryEn;
             switch (categoryVi) {
-                case "Chi tiêu thiết yếu":
-                    categoryEn = "Essential";
+                case "Lương":
+                    categoryEn = "Salary";
                     break;
-                case "Giải trí":
-                    categoryEn = "Leisure";
+                case "Thu nhập phụ":
+                    categoryEn = "Side Income";
                     break;
-                case "Đầu tư":
-                    categoryEn = "Investment";
-                    break;
-                case "Chi tiêu không đoán trước":
-                    categoryEn = "Unexpected";
+                case "Lợi nhuận đầu tư":
+                    categoryEn = "Investment Profit";
                     break;
                 default:
                     categoryEn = "Null";
             }
 
-            expense.setNote(note);
-            expense.setDate(date);
-            expense.setAmount(amount);
-            expense.setCategory(categoryEn);
+            income.setNote(note);
+            income.setDate(date);
+            income.setAmount(amount);
+            income.setCategory(categoryEn);
 
-            dbHelper.updateExpense(expense);
+            dbHelper.updateIncome(income);
 
-            expenseList.clear();
-            expenseList.addAll(dbHelper.getListExpenses());
+            incomeList.clear();
+            incomeList.addAll(dbHelper.getListIncomes());
             notifyDataSetChanged();
 
             dialog.dismiss();
@@ -218,4 +214,5 @@ public class ExpenseListAdapter extends RecyclerView.Adapter<ExpenseListAdapter.
 
         dialog.show();
     }
+
 }

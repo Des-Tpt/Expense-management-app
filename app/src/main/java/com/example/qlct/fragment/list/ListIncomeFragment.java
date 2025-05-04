@@ -1,4 +1,4 @@
-package com.example.qlct.ui.list;
+package com.example.qlct.fragment.list;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
@@ -22,48 +22,49 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.qlct.Database.ExpenseModel;
+import com.example.qlct.Database.IncomeModel;  // Sử dụng IncomeModel
 import com.example.qlct.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.Color;
 
 import java.util.List;
 
-public class ListExpenseFragment extends Fragment {
+public class ListIncomeFragment extends Fragment {
     private RecyclerView recyclerView;
-    private ExpenseListAdapter expenseListAdapter;
-    private List<ExpenseModel> expenseList;
+    private IncomeListAdapter incomeListAdapter;
+    private List<IncomeModel> incomeList;
     private DataBaseHelper dbHelper;
 
-
-    public ListExpenseFragment() {
+    public ListIncomeFragment() {
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = view.findViewById(R.id.recyclerViewExpense); // ID RecyclerView trong XML
+        recyclerView = view.findViewById(R.id.recyclerViewIncome);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         dbHelper = new DataBaseHelper(getContext());
-        expenseList = dbHelper.getListExpenses();
+        incomeList = dbHelper.getListIncomes();
 
-        expenseListAdapter = new ExpenseListAdapter(expenseList, getContext());
-        recyclerView.setAdapter(expenseListAdapter);
+        incomeListAdapter = new IncomeListAdapter(incomeList, getContext());
+        recyclerView.setAdapter(incomeListAdapter);
 
         View checkAllButton = view.findViewById(R.id.checkBoxAll);
         checkAllButton.setOnClickListener(v -> {
-            expenseListAdapter.toggleCheckAll();
+            incomeListAdapter.toggleCheckAll();
         });
 
-        FloatingActionButton fab = view.findViewById(R.id.fabAddExpense);
+        FloatingActionButton fab = view.findViewById(R.id.fabAddIncome);
         fab.setOnClickListener(v -> {
             showAddDialog();
         });
 
         View deleteButton = view.findViewById(R.id.btnDelete);
         deleteButton.setOnClickListener(v -> {
-            if (!expenseListAdapter.hasAnyChecked()) {
+            if (!incomeListAdapter.hasAnyChecked()) {
                 showWarningDialog();
             } else {
                 showConfirmDialog();
@@ -84,7 +85,7 @@ public class ListExpenseFragment extends Fragment {
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         btnConfirm.setOnClickListener(v -> {
-            expenseListAdapter.deleteChecked();
+            incomeListAdapter.deleteChecked();
             dialog.dismiss();
         });
 
@@ -92,11 +93,13 @@ public class ListExpenseFragment extends Fragment {
     }
 
     private void showAddDialog() {
-        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_add_expense, null);
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_add_income, null);
         AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setView(dialogView)
                 .setCancelable(true)
                 .create();
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         EditText edtNote = dialogView.findViewById(R.id.edtNote);
         EditText edtAmount = dialogView.findViewById(R.id.edtAmount);
@@ -105,9 +108,8 @@ public class ListExpenseFragment extends Fragment {
         Button btnCancel = dialogView.findViewById(R.id.btnHuy);
         EditText edtMonth = dialogView.findViewById(R.id.edtMonth);
 
-        // Gắn dữ liệu cho spinner (ví dụ tạm)
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,
-                new String[]{"Chi tiêu thiết yếu", "Giải trí", "Đầu tư", "Chi tiêu không đoán trước"});
+                new String[]{"Lương", "Thu nhập phụ", "Lợi nhuận đầu tư"});
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(adapter);
 
@@ -121,17 +123,14 @@ public class ListExpenseFragment extends Fragment {
             String category = spinnerCategory.getSelectedItem().toString();
 
             switch (category) {
-                case "Chi tiêu thiết yếu":
-                    category = "Essential";
+                case "Lương":
+                    category = "Salary";
                     break;
-                case "Giải trí":
-                    category = "Leisure";
+                case "Thu nhập phụ":
+                    category = "Side Income";
                     break;
-                case "Đầu tư":
-                    category = "Investment";
-                    break;
-                case "Chi tiêu không đoán trước":
-                    category = "Unexpected";
+                case "Lợi nhuận đầu tư":
+                    category = "Investment Profit";
                     break;
                 default:
                     category = "Unknown";
@@ -147,19 +146,16 @@ public class ListExpenseFragment extends Fragment {
 
             double amount = Double.parseDouble(amountStr);
 
-            // Tạo model và lưu vào CSDL
-            ExpenseModel newExpense = new ExpenseModel(0, category, amount, note, date,false);
+            IncomeModel newIncome = new IncomeModel(0, category, amount, note, date,false);
 
-            dbHelper.insertExpense(newExpense);
+            dbHelper.insertIncome(newIncome);
 
-            // Cập nhật lại danh sách
-            expenseList.clear();
-            expenseList.addAll(dbHelper.getListExpenses());
-            expenseListAdapter.notifyDataSetChanged();
+            incomeList.clear();
+            incomeList.addAll(dbHelper.getListIncomes());
+            incomeListAdapter.notifyDataSetChanged();
 
             dialog.dismiss();
         });
-
         dialog.show();
     }
 
@@ -175,10 +171,8 @@ public class ListExpenseFragment extends Fragment {
         new Handler(Looper.getMainLooper()).postDelayed(warningDialog::dismiss, 2000);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_expense_list, container, false);
+        return inflater.inflate(R.layout.fragment_income_list, container, false);  // Layout cho income list
     }
 }
-

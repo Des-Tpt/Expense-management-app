@@ -3,20 +3,18 @@ package com.example.qlct.Database;
 public class expense {
     private int id;
     private String category;
-    private float amount;  // Thay đổi kiểu từ double thành float
+    private float amount;
     private String date;
-    private String name;  // Gán từ "note"
+    private String name;
     private boolean isChecked;
 
-    // Constructor
-    public expense(int id, String category, float amount, String date) {  // Sửa kiểu ở đây
+    public expense(int id, String category, float amount, String date) {
         this.id = id;
         this.category = category;
         this.amount = amount;
         this.date = date;
     }
 
-    // Getter và Setter
     public int getId() {
         return id;
     }

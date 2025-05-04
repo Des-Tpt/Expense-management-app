@@ -1,4 +1,4 @@
-package com.example.qlct.ui.report;
+package com.example.qlct.fragment.report;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -37,9 +37,7 @@ import com.example.qlct.Database.DataBaseHelper;
 import com.example.qlct.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Report extends Fragment {
 

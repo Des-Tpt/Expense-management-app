@@ -1,4 +1,4 @@
-package com.example.qlct.ui.report;
+package com.example.qlct.fragment.report;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,20 +11,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.qlct.Database.CategorySum;
-import com.example.qlct.Database.income;
 import com.example.qlct.R;
 
 import java.util.List;
 
-public class CategoryIncomeAdapter extends RecyclerView.Adapter<CategoryIncomeAdapter.CategoryViewHolder> {
+public class CategoryExpenseAdapter extends RecyclerView.Adapter<CategoryExpenseAdapter.CategoryViewHolder> {
 
     private Context context;
     private List<CategorySum> summaryList;
-    public CategoryIncomeAdapter(Context context, List<CategorySum> summaryList) {
+
+    // Constructor nhận vào context và summaryList
+    public CategoryExpenseAdapter(Context context, List<CategorySum> summaryList) {
         this.context = context;
         this.summaryList = summaryList;
     }
-
 
     @NonNull
     @Override
@@ -64,25 +64,29 @@ public class CategoryIncomeAdapter extends RecyclerView.Adapter<CategoryIncomeAd
 
     private int getCategoryColor(String category) {
         switch (category) {
-            case "Salary":
-                return Color.rgb(76, 175, 80); // Green
-            case "Side Income":
-                return Color.parseColor("#644BAC"); // Blue
-            case "Investment Profit":
-                return Color.rgb(255, 193, 7); // Amber
+            case "Essential":
+                return Color.GREEN;
+            case "Leisure":
+                return Color.RED;
+            case "Investment":
+                return Color.parseColor("#644BAC");
+            case "Unexpected":
+                return Color.GRAY;
             default:
-                return Color.DKGRAY;
+                return Color.BLUE;
         }
     }
 
     private String getCategoryNameInVietnamese(String category) {
         switch (category) {
-            case "Salary":
-                return "Lương";
-            case "Side Income":
-                return "Thu nhập phụ";
-            case "Investment Profit":
-                return "Lợi nhuận đầu tư";
+            case "Essential":
+                return "Chi tiêu thiết yếu";
+            case "Leisure":
+                return "Giải trí";
+            case "Investment":
+                return "Đầu tư";
+            case "Unexpected":
+                return "Chi tiêu không đoán trước";
             default:
                 return "Khác";
         }

@@ -7,16 +7,20 @@
 
     <fragment
         android:id="@+id/nav_reports"
-        android:name="com.example.qlct.ui.report.Report"
+        android:name="com.example.qlct.fragment.report.Report"
         android:label="Thống kê thu chi"
         tools:layout="@layout/fragment_report" />
     <fragment
         android:id="@+id/fragment_expenses_list"
-        android:name="com.example.qlct.ui.list.ListExpenseFragment"
+        android:name="com.example.qlct.fragment.list.ListExpenseFragment"
         android:label="Danh sách chi tiêu" />
     <fragment
         android:id="@+id/fragment_income_list"
-        android:name="com.example.qlct.ui.list.ListIncomeFragment"
-        android:label="Danh sách thu nhập"
-        />
+        android:name="com.example.qlct.fragment.list.ListIncomeFragment"
+        android:label="Danh sách thu nhập" />
+    <fragment
+        android:id="@+id/nav_user"
+        android:name="com.example.qlct.fragment.UserFragment"
+        android:label="Tài khoản"
+    />
 </navigation>

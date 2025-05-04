@@ -4,7 +4,7 @@ public class IncomeModel {
     private int id;
     private String category;
     private double amount;
-    private String note;  // Gán từ "note"
+    private String note;
     private String date;
     private boolean isChecked;
 
