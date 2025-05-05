@@ -20,7 +20,6 @@ public class CategoryExpenseAdapter extends RecyclerView.Adapter<CategoryExpense
     private Context context;
     private List<CategorySum> summaryList;
 
-    // Constructor nhận vào context và summaryList
     public CategoryExpenseAdapter(Context context, List<CategorySum> summaryList) {
         this.context = context;
         this.summaryList = summaryList;
